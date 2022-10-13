@@ -3,10 +3,10 @@ const app = express();
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const TodoTask = require("../models/TodoTask");
+const TodoTask = require("./models/TodoTask");
 const port = 3000;
 
-dotenv.config();
+dotenv.config({ path: ".env" });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -19,11 +19,15 @@ app.use(express.json());
 main().catch((err) => console.log(err));
 
 async function main() {
-  mongoose.connect(process.env.DB_CONNECT, {}, () => {
-    console.log("Connected to db!");
-    app.listen(port, () => {
-      console.log(`app running in port ${port}`);
-    });
+  mongoose.connect("mongodb://mongodb:27017/GFG", {}, (err) => {
+    if (err) {
+      console.log("error :" + err);
+    } else {
+      console.log("Connected to db!");
+      app.listen(port, () => {
+        console.log(`app running in port ${port}`);
+      });
+    }
   });
 }
 
